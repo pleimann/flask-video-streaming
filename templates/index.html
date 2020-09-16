@@ -1,9 +1,47 @@
 <html>
-  <head>
-    <title>Video Streaming Demonstration</title>
-  </head>
-  <body>
-    <h1>Video Streaming Demonstration</h1>
-    <img src="{{ url_for('video_feed') }}">
-  </body>
+
+<head>
+  <title>Waffle PI</title>
+
+  <style>
+    html, body {
+      margin: 0;
+    }
+
+    #waffleImage {
+      height: 100%;
+      width: 100%;
+      background: url('video_feed');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+
+    #waffleImage:fullscreen {
+      background-position: bottom;
+      background-size: cover;
+    }
+  </style>
+
+  <script>
+    function toggleFullScreen() {
+      var element = document.getElementById('waffleImage');
+      try {
+        if (!document.fullscreenElement) {
+          element.requestFullscreen();
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+
+      } catch (e) {
+        window.alert('sorry unable to go to fullscreen! ' + e.message);
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="waffleImage" onclick="toggleFullScreen()"></div>
+</body>
+
 </html>

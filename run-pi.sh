@@ -1,1 +1,1 @@
-CAMERA=pi gunicorn --worker-class gevent --workers 1 --bind 0.0.0.0:5000 app:app
+CAMERA=pi gunicorn --worker-class gevent --workers 1 --bind 0.0.0.0:80 app:app
