@@ -1,0 +1,30 @@
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100vmin;
+    height: 100vmin;
+}
+
+.action-bar {
+    position: absolute;
+    top: 0;
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+button {
+    margin-right: 1em;
+}
+
+#waffle-image {
+    z-index: -100;
+    width: 100%;
+    height: auto;
+}
+
+#waffle-image:fullscreen {
+    background-position: bottom;
+    background-size: cover;
+}

@@ -1,47 +1,29 @@
 <html>
 
 <head>
-  <title>Waffle PI</title>
+    <title>Waffle Cam</title>
 
-  <style>
-    html, body {
-      margin: 0;
-    }
-
-    #waffleImage {
-      height: 100%;
-      width: 100%;
-      background: url('video_feed');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-    }
-
-    #waffleImage:fullscreen {
-      background-position: bottom;
-      background-size: cover;
-    }
-  </style>
-
-  <script>
-    function toggleFullScreen() {
-      var element = document.getElementById('waffleImage');
-      try {
-        if (!document.fullscreenElement) {
-          element.requestFullscreen();
-        } else if (document.exitFullscreen) {
-          document.exitFullscreen();
+    <style>
+        html,
+        body {
+            margin: 0;
         }
+    </style>
 
-      } catch (e) {
-        window.alert('sorry unable to go to fullscreen! ' + e.message);
-      }
-    }
-  </script>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/app.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', path='/js/app.js') }}"></script>
 </head>
 
 <body>
-  <div id="waffleImage" onclick="toggleFullScreen()"></div>
+    <div class="container">
+        <img id="waffle-image" src="{{ url_for('video_feed') }}" onclick="toggleFullScreen(this)" />
+
+        <nav class="action-bar">
+            <button onclick="saveFrame()">Download Frame</button>
+            <!-- <button>Brighter</button>
+            <button>Darker</button> -->
+        </nav>
+    </div>
 </body>
 
 </html>
