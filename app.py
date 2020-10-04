@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+import uvicorn
 from importlib import import_module
 from os import environ
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -42,3 +43,15 @@ def gen(camera):
 def video_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return StreamingResponse(gen(Camera()), media_type='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.websocket('/ws', name='ws')
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, reload=True)
