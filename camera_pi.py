@@ -9,7 +9,7 @@ class Camera(BaseCamera):
     def frames():
         with picamera.PiCamera(resolution='1640x1232', framerate=10) as camera:
             # let camera warm up
-            time.sleep(2)
+            time.sleep(1)
 
             camera.vflip = True
             camera.hflip = True
