@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', path='/css/app.css') }}">
     <script type="text/javascript" src="{{ url_for('static', path='/js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', path='/js/reconnecting-websocket.js') }}"></script>
 </head>
 
 <body>
@@ -30,7 +31,12 @@
     </div>
 
     <script>
-        var ws = new WebSocket("{{ url_for('ws') }}");
+        var url = "{{ url_for('ws') }}";
+        // var ws = new WebSocket(url);
+        var ws = new ReconnectingWebSocket(url, null, {
+            debug: true,
+            reconnectInterval: 4000
+        });
 
         ws.onmessage = function(event) {
             if (typeof event.data === String) {
