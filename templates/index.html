@@ -3,6 +3,8 @@
 <head>
     <title>Waffle Cam</title>
 
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='favicon.ico') }}" />
+
     <style>
         html,
         body {
@@ -24,12 +26,6 @@
             <button>Darker</button> -->
         </nav>
         <div class="chat">
-            <form action="" onsubmit="sendMessage(event)">
-                <input type="text" id="messageText" autocomplete="off" />
-                <button>Send</button>
-            </form>
-            <ul id='messages'>
-            </ul>
         </div>
     </div>
 
@@ -37,20 +33,20 @@
         var ws = new WebSocket("{{ url_for('ws') }}");
 
         ws.onmessage = function(event) {
-            var messages = document.getElementById('messages')
-            var message = document.createElement('li')
-            var content = document.createTextNode(event.data)
-
-            message.appendChild(content)
-            messages.appendChild(message)
+            if (typeof event.data === String) {
+                alert(event.data);
+            }
         };
 
-        function sendMessage(event) {
-            var input = document.getElementById("messageText")
-            ws.send(input.value)
-            input.value = ''
+        function sendMessage(message) {
+            ws.send(message)
             event.preventDefault()
         }
+
+        window.addEventListener('beforeunload', (event) => {
+            // close websocket connections
+            ws.close();
+        });
     </script>
 </body>
 
