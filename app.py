@@ -1,14 +1,26 @@
 #!/usr/bin/env python
 
 import uvicorn
+from sys import argv
 from importlib import import_module
 from os import environ
 from fastapi import FastAPI, Request, WebSocket
+from fastapi.logger import logger
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.websockets import WebSocketDisconnect
+from pyngrok import ngrok
+
+PORT = 8000
 
 app = FastAPI()
+
+# Open a ngrok tunnel to the dev server
+ngrok.set_auth_token('1iPQTDAL34yTkyWTG9CREUvTXUM_6QiN1ghZ5zmSc4da2EDDA')
+public_url = ngrok.connect(PORT, options={'bind_tls': 'true', 'auth': 'waffle'})
+
+print(f'NGrok tunnel "{public_url}" -> "http://127.0.0.1:{PORT}/"')
 
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
@@ -48,10 +60,14 @@ def video_feed():
 @app.websocket('/ws', name='ws')
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await websocket.send_text(f"Message text was: {data}")
+
+    except (WebSocketDisconnect):
+        logger.info(f'Browser dropped WebSocket connection. client_status={websocket.client_state}')
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, reload=True)
+    uvicorn.run(app, port=PORT)
